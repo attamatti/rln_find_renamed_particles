@@ -39,7 +39,10 @@ selIDs = {}
 for particle in data:
     x = particle[labels['_rlnCoordinateX']]
     y = particle[labels['_rlnCoordinateY']]
-    micrograph = particle[labels['_rlnMicrographName']]
+    try:
+        micrograph = particle[labels['_rlnMicrographName']].split('/')[-1].split('.')[0]
+    except:
+        micrograph = particle[labels['_rlnImageName']].split('/')[-1].split('.')[0]
     selIDs['{}{}{}'.format(x,y,micrograph)] = particle[labels['_rlnImageName']]
 
 
@@ -50,13 +53,13 @@ for i in shiny_header:
     
 n= 0
 for i in shiny_data:
-    x = i[labels['_rlnCoordinateX']]
-    y = i[labels['_rlnCoordinateY']]
-    micrograph =i[labels['_rlnMicrographName']]
+    x = i[shiny_labels['_rlnCoordinateX']]
+    y = i[shiny_labels['_rlnCoordinateY']]
+    micrograph =i[shiny_labels['_rlnMicrographName']].split('/')[-1].split('.')[0]
     ID = '{}{}{}'.format(x,y,micrograph)
     if ID in selIDs:
         output.write('{0}\n'.format('   '.join(i)))
-        print('{0} <-- {1}'.format(i[labels['_rlnImageName']],selIDs[ID]))
+        print('{0} <-- {1}'.format(i[shiny_labels['_rlnImageName']],selIDs[ID]))
         n+=1
 
 print('{0} shiny particles').format(len(shiny_data))
